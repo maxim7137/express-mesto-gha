@@ -20,6 +20,10 @@ const cardSchema = new mongoose.Schema({
     type: Array,
     default: [],
   },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
-module.exports = mongoose.model('card', userSchema);
+module.exports = mongoose.model('card', cardSchema);
