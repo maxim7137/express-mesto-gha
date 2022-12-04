@@ -16,10 +16,6 @@ module.exports.createCard = (req, res) => {
 
 module.exports.deleteCard = (req, res) => {
   const { cardId } = req.params;
-
-  console.log('cardId', cardId, 'cardId');
-  console.log('req.params', req.params, 'req.params');
-
   Card.deleteOne({ _id: cardId })
     .then((card) => res.send({ data: card }))
     .catch((err) => res.status(500).send({ message: err.message }));
