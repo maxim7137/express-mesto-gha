@@ -10,7 +10,7 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 });
  */
 mongoose.connect('mongodb://localhost:27017/mestodb');
-
+app.use(express.json()); // чтобы было body в запросе
 app.use('/cards', require('./routes/cards'));
 app.use('/users', require('./routes/users'));
 app.use('/users/:userId', require('./routes/user'));
