@@ -7,8 +7,8 @@ module.exports.getCards = (req, res) => {
 };
 
 module.exports.createCard = (req, res) => {
-  const { name, link, userId, likes, createdAt } = req.body;
-
+  const { name, link, likes, createdAt } = req.body;
+  const userId = req.user._id;
   Card.create({ name, link, owner: userId, likes, createdAt })
     .then((card) => res.send({ data: card }))
     .catch((err) => res.status(500).send({ message: err.message }));
