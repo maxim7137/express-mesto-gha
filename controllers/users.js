@@ -21,7 +21,7 @@ module.exports.createUser = (req, res) => {
 
 module.exports.updateAvatar = (req, res) => {
   const { avatar } = req.body;
-  User.findByIdAndUpdate(req.user._id, { avatar })
-    .then((userAvatar) => res.send(userAvatar))
+  User.findByIdAndUpdate(req.user._id, { avatar }, { new: true })
+    .then((user) => res.send(user.avatar))
     .catch((err) => res.status(500).send({ message: err.message }));
 };
