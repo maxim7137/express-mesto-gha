@@ -11,8 +11,8 @@ const {
 
 router.get('/', getCards);
 router.post('/', router.use(express.json()), createCard);
-// router.put('/:cardId/likes', likeCard);
-// router.delete('/:cardId/likes', dislikeCard);
+router.put('/:cardId/likes', likeCard);
+router.delete('/:cardId/likes', dislikeCard);
 router.delete('/:cardId', deleteCard);
 
 module.exports = router;
