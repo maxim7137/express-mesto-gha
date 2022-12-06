@@ -1,9 +1,6 @@
 {
   "extends": "airbnb-base",
   "rules": {
-    "allow": ["_id"],
-    "allowAfterThis": true,
-    "allowAfterSuper": true,
-    "allowAfterThisConstructor": true
+    "no-underscore-dangle": "off"
   }
 }
