@@ -25,3 +25,10 @@ module.exports.updateAvatar = (req, res) => {
     .then((user) => res.send(user.avatar))
     .catch((err) => res.status(500).send({ message: err.message }));
 };
+
+module.exports.updateUser = (req, res) => {
+  const { name, about } = req.body;
+  User.findByIdAndUpdate(req.user._id, { name, about }, { new: true })
+    .then((user) => res.send({ name: user.name, about: user.about }))
+    .catch((err) => res.status(500).send({ message: err.message }));
+};

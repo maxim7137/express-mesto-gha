@@ -1,16 +1,10 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const { PORT = 3000 } = process.env;
+const { PORT = 3000, DB = 'mongodb://localhost:27017/mestodb' } = process.env;
 const app = express();
-/*
-mongoose.connect('mongodb://localhost:27017/mestodb', {
-  useNewUrlParser: true,
-  useCreateIndex: true,
-  useFindAndModify: false,
-});
- */
-mongoose.connect('mongodb://localhost:27017/mestodb');
-app.use(express.json()); // чтобы было body в запросе
+const router = require('./routes');
+
+mongoose.connect(DB);
 
 // <-- временный мидлвер
 app.use((req, res, next) => {
@@ -22,9 +16,9 @@ app.use((req, res, next) => {
 });
 // временный мидлвер -->
 
-app.use('/cards', require('./routes/cards'));
-app.use('/users', require('./routes/users'));
+app.use(router);
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
+  console.log(`App connect to dateBase ${DB}`);
 });

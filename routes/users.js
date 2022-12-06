@@ -1,4 +1,6 @@
+const express = require('express');
 const router = require('express').Router();
+
 const {
   getUsers,
   createUser,
@@ -9,8 +11,8 @@ const {
 
 router.get('/:userId', getUser);
 router.get('/', getUsers);
-router.post('/', createUser);
-router.patch('/me/avatar', updateAvatar);
-// router.patch('/me', updateUser);
+router.post('/', router.use(express.json()), createUser);
+router.patch('/me/avatar', router.use(express.json()), updateAvatar);
+router.patch('/me', updateUser);
 
 module.exports = router;
