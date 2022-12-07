@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+
 const { PORT = 3000, DB = 'mongodb://localhost:27017/mestodb' } = process.env;
 const app = express();
 const router = require('./routes');
@@ -8,9 +9,7 @@ mongoose.connect(DB);
 
 // <-- временный мидлвер
 app.use((req, res, next) => {
-  req.user = {
-    _id: '638cb3490c45072e864bd586',
-  };
+  req.user = { _id: '6390d6df66f9fdca8196afa1' };
 
   next();
 });

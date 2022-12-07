@@ -10,9 +10,11 @@ const {
 } = require('../controllers/cards');
 
 router.get('/', getCards);
-router.post('/', router.use(express.json()), createCard);
 router.put('/:cardId/likes', likeCard);
 router.delete('/:cardId/likes', dislikeCard);
 router.delete('/:cardId', deleteCard);
+
+router.use(express.json());
+router.post('/', createCard);
 
 module.exports = router;

@@ -11,8 +11,11 @@ const {
 
 router.get('/:userId', getUser);
 router.get('/', getUsers);
-router.post('/', router.use(express.json()), createUser);
-router.patch('/me/avatar', router.use(express.json()), updateAvatar);
 router.patch('/me', updateUser);
+
+router.use(express.json());
+
+router.post('/', createUser);
+router.patch('/me/avatar', updateAvatar);
 
 module.exports = router;
