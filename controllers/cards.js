@@ -8,20 +8,11 @@ module.exports.createCard = (req, res) => {
     .catch((err) => res.status(500).send({ message: err.message }));
 };
 
-/* module.exports.getCards = (req, res) => {
+module.exports.getCards = (req, res) => {
   Card.find({})
-    .populate('user')
+    .populate(['owner', 'likes'])
     .then((cards) => res.send(cards))
     .catch((err) => res.status(500).send({ message: err.message }));
-}; */
-
-module.exports.getCards = async (req, res) => {
-  try {
-    const cards = await Card.find({}).populate('user'); // .populate('user')
-    res.send(cards);
-  } catch (err) {
-    res.status(500).send({ message: err.message });
-  }
 };
 
 module.exports.deleteCard = (req, res) => {
