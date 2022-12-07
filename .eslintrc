@@ -4,6 +4,7 @@
     "no-underscore-dangle": "off",
     "object-curly-newline": ["error", { "multiline": true }],
     "implicit-arrow-linebreak": "off",
-    "comma-dangle": "off"
+    "comma-dangle": "off",
+    "quotes": "off"
   }
 }

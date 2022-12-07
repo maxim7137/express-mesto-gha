@@ -16,7 +16,13 @@ module.exports.createUser = (req, res) => {
   const { name, about, avatar } = req.body;
   User.create({ name, about, avatar })
     .then((user) => res.send(user))
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch((err) => {
+      if (err.message === 'user validation failed: avatar: Ведите URL') {
+        res.status(400).send({ message: 'Ведите URL' });
+      } else {
+        res.status(500).send({ message: err.message });
+      }
+    });
 };
 
 module.exports.updateAvatar = (req, res) => {
