@@ -11,10 +11,10 @@ const {
 
 router.get('/:userId', getUser);
 router.get('/', getUsers);
+
+router.use(express.json()); // мидлвэр для body
+
 router.patch('/me', updateUser);
-
-router.use(express.json());
-
 router.post('/', createUser);
 router.patch('/me/avatar', updateAvatar);
 
