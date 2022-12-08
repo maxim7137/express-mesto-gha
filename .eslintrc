@@ -5,6 +5,8 @@
     "object-curly-newline": ["error", { "multiline": true }],
     "implicit-arrow-linebreak": "off",
     "comma-dangle": "off",
-    "quotes": "off"
+    "quotes": "off",
+    "linebreak-style": "off",
+    "no-console": "off"
   }
 }
