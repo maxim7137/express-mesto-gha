@@ -9,7 +9,7 @@ mongoose.connect(DB);
 
 // <-- временный мидлвер
 app.use((req, res, next) => {
-  req.user = { _id: '6390d6df66f9fdca8196afa1' };
+  req.user = { _id: '6391c55b0484de7e00378cac' };
 
   next();
 });

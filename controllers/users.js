@@ -8,7 +8,7 @@ module.exports.getUsers = (req, res) => {
 
 module.exports.getUser = (req, res) => {
   User.find({ _id: req.params.userId })
-    .then((user) => res.send(user))
+    .then((user) => res.send(user[0]))
     .catch((err) => res.status(500).send({ message: err.message }));
 };
 
@@ -17,8 +17,8 @@ module.exports.createUser = (req, res) => {
   User.create({ name, about, avatar })
     .then((user) => res.send(user))
     .catch((err) => {
-      if (err.message === 'user validation failed: avatar: Ведите URL') {
-        res.status(400).send({ message: 'Ведите URL' });
+      if (err.name === 'ValidationError') {
+        res.status(400).send({ message: err.message.split('-')[1] });
       } else {
         res.status(500).send({ message: err.message });
       }
