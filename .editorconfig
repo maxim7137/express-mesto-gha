@@ -30,7 +30,7 @@ trim_trailing_whitespace = false
 
 # Denotes whether file should end with a newline
 # Possible values - true, false
-insert_final_newline = false
+insert_final_newline = true
 
 [*js]
 quote_type = single
