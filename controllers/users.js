@@ -56,7 +56,7 @@ module.exports.updateAvatar = (req, res) => {
       } else if (!user.name) {
         res.status(400).send({ message: 'Некорректный идентификатор' });
       } else {
-        res.send(user.avatar);
+        res.send(user);
       }
     })
     .catch((err) => {
