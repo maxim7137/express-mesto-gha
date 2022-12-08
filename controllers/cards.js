@@ -2,10 +2,15 @@ const Card = require('../models/card');
 
 module.exports.createCard = (req, res) => {
   const { name, link } = req.body;
-  const userId = req.user._id;
-  Card.create({ name, link, owner: userId })
+  Card.create({ name, link, owner: req.user._id })
     .then((card) => res.send(card))
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        res.status(400).send({ message: err.message.split('-')[1] });
+      } else {
+        res.status(500).send({ message: err.message });
+      }
+    });
 };
 
 module.exports.getCards = (req, res) => {
@@ -16,10 +21,25 @@ module.exports.getCards = (req, res) => {
 };
 
 module.exports.deleteCard = (req, res) => {
-  const { cardId } = req.params;
-  Card.deleteOne({ _id: cardId })
-    .then((answer) => res.send(answer))
-    .catch((err) => res.status(500).send({ message: err.message }));
+  Card.deleteOne({ _id: req.params.cardId })
+    .then((answer) => {
+      if (answer.deletedCount === 0) {
+        res
+          .status(404)
+          .send({ message: 'Карточка с указанным _id не найдена.' });
+      } else if (!answer) {
+        res.status(400).send({ message: 'Некорректный идентификатор' });
+      } else {
+        res.send({ message: 'Пост удалён' });
+      }
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(400).send({ message: 'Некорректный идентификатор' });
+      } else {
+        res.status(500).send({ message: err.message });
+      }
+    });
 };
 
 module.exports.likeCard = (req, res) =>
@@ -28,8 +48,24 @@ module.exports.likeCard = (req, res) =>
     { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
     { new: true }
   )
-    .then((answer) => res.send(answer))
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .then((card) => {
+      if (!card) {
+        res
+          .status(404)
+          .send({ message: 'Передан несуществующий _id карточки' });
+      } else if (!card.name) {
+        res.status(400).send({ message: 'Передан некорректный идентификатор' });
+      } else {
+        res.send(card);
+      }
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(400).send({ message: 'Передан некорректный идентификатор' });
+      } else {
+        res.status(500).send({ message: err.message });
+      }
+    });
 
 module.exports.dislikeCard = (req, res) =>
   Card.findByIdAndUpdate(
@@ -37,5 +73,21 @@ module.exports.dislikeCard = (req, res) =>
     { $pull: { likes: req.user._id } }, // убрать _id из массива
     { new: true }
   )
-    .then((answer) => res.send(answer))
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .then((card) => {
+      if (!card) {
+        res
+          .status(404)
+          .send({ message: 'Передан несуществующий _id карточки' });
+      } else if (!card.name) {
+        res.status(400).send({ message: 'Передан некорректный идентификатор' });
+      } else {
+        res.send(card);
+      }
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(400).send({ message: 'Передан некорректный идентификатор' });
+      } else {
+        res.status(500).send({ message: err.message });
+      }
+    });
