@@ -8,19 +8,16 @@ module.exports.getUsers = (req, res) => {
 
 module.exports.getUser = (req, res) => {
   User.findById(req.params.userId)
+    .orFail(new Error('NotFound'))
     .then((user) => {
-      if (!user) {
+      res.send(user);
+    })
+    .catch((err) => {
+      if (err.message === 'NotFound') {
         res
           .status(404)
           .send({ message: 'Пользователь по указанному _id не найден' });
-      } else if (!user.name) {
-        res.status(400).send({ message: 'Некорректный идентификатор' });
-      } else {
-        res.send(user);
-      }
-    })
-    .catch((err) => {
-      if (err.name === 'CastError') {
+      } else if (err.name === 'CastError') {
         res.status(400).send({ message: 'Некорректный идентификатор' });
       } else {
         res.status(500).send({ message: err.message });
@@ -48,19 +45,16 @@ module.exports.updateAvatar = (req, res) => {
     { avatar },
     { new: true, runValidators: true }
   )
+    .orFail(new Error('NotFound'))
     .then((user) => {
-      if (!user) {
+      res.send(user);
+    })
+    .catch((err) => {
+      if (err.message === 'NotFound') {
         res
           .status(404)
           .send({ message: 'Пользователь по указанному _id не найден' });
-      } else if (!user.name) {
-        res.status(400).send({ message: 'Некорректный идентификатор' });
-      } else {
-        res.send(user);
-      }
-    })
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
+      } else if (err.name === 'ValidationError') {
         res.status(400).send({ message: err.message.split('-')[1] });
       } else if (err.name === 'CastError') {
         res.status(400).send({ message: 'Некорректный идентификатор' });
@@ -77,19 +71,16 @@ module.exports.updateUser = (req, res) => {
     { name, about },
     { new: true, runValidators: true }
   )
+    .orFail(new Error('NotFound'))
     .then((user) => {
-      if (!user) {
+      res.send({ name: user.name, about: user.about });
+    })
+    .catch((err) => {
+      if (err.message === 'NotFound') {
         res
           .status(404)
           .send({ message: 'Пользователь по указанному _id не найден' });
-      } else if (!user.name) {
-        res.status(400).send({ message: 'Некорректный идентификатор' });
-      } else {
-        res.send({ name: user.name, about: user.about });
-      }
-    })
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
+      } else if (err.name === 'ValidationError') {
         res.status(400).send({ message: err.message.split('-')[1] });
       } else if (err.name === 'CastError') {
         res.status(400).send({ message: 'Некорректный идентификатор' });

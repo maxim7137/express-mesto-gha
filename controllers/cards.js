@@ -48,19 +48,16 @@ module.exports.likeCard = (req, res) =>
     { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
     { new: true }
   )
+    .orFail(new Error('NotFound'))
     .then((card) => {
-      if (!card) {
+      res.send(card);
+    })
+    .catch((err) => {
+      if (err.message === 'NotFound') {
         res
           .status(404)
           .send({ message: 'Передан несуществующий _id карточки' });
-      } else if (!card.name) {
-        res.status(400).send({ message: 'Передан некорректный идентификатор' });
-      } else {
-        res.send(card);
-      }
-    })
-    .catch((err) => {
-      if (err.name === 'CastError') {
+      } else if (err.name === 'CastError') {
         res.status(400).send({ message: 'Передан некорректный идентификатор' });
       } else {
         res.status(500).send({ message: err.message });
@@ -73,19 +70,16 @@ module.exports.dislikeCard = (req, res) =>
     { $pull: { likes: req.user._id } }, // убрать _id из массива
     { new: true }
   )
+    .orFail(new Error('NotFound'))
     .then((card) => {
-      if (!card) {
+      res.send(card);
+    })
+    .catch((err) => {
+      if (err.message === 'NotFound') {
         res
           .status(404)
           .send({ message: 'Передан несуществующий _id карточки' });
-      } else if (!card.name) {
-        res.status(400).send({ message: 'Передан некорректный идентификатор' });
-      } else {
-        res.send(card);
-      }
-    })
-    .catch((err) => {
-      if (err.name === 'CastError') {
+      } else if (err.name === 'CastError') {
         res.status(400).send({ message: 'Передан некорректный идентификатор' });
       } else {
         res.status(500).send({ message: err.message });
