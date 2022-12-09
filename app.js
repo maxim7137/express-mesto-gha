@@ -14,6 +14,7 @@ app.use((req, res, next) => {
   next();
 });
 // временный мидлвер -->
+router.use(express.json()); // мидлвер для body
 
 app.use(router);
 
