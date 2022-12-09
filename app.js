@@ -16,6 +16,7 @@ const limiter = rateLimit({
 });
 app.use(limiter); // мидлвер для ограничения кол-во запросов. Для защиты от DoS-атак.
 app.use(helmet()); // мидлвер для для простановки security-заголовков, защ. от нек. уязвим.
+app.use(express.json()); // мидлвер для body
 
 mongoose.connect(DB);
 
@@ -26,7 +27,6 @@ app.use((req, res, next) => {
   next();
 });
 // временный мидлвер -->
-router.use(express.json()); // мидлвер для body
 
 app.use(router);
 
