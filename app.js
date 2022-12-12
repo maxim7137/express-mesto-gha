@@ -24,7 +24,7 @@ app.use(express.json()); // мидлвер для body
 
 // <-- временный мидлвер
 app.use((req, res, next) => {
-  req.user = { _id: '638ce8aa62ff3e7791d87a09' };
+  req.headers.authorization = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2Mzk3N2MxNTc2N2IyOGNjZmIxY2M0NTQiLCJpYXQiOjE2NzA4NzIxMDYsImV4cCI6MTY3MTQ3NjkwNn0.uQCpfQ6UBEdWinbmOQ3c71g5FDMZ5s_pVLuFxfBbOnw';
 
   next();
 });
