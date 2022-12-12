@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const router = require('./routes');
+const { errorHandler } = require('./middlewares/errorHandler');
 
 const { PORT = 3000, DB = 'mongodb://localhost:27017/mestodb' } = process.env;
 
@@ -23,7 +24,7 @@ app.use(express.json()); // мидлвер для body
 
 // <-- временный мидлвер
 app.use((req, res, next) => {
-  req.user = { _id: '6396cfdb42e5855ac4d722e5' };
+  req.user = { _id: '638ce8aa62ff3e7791d87a09' };
 
   next();
 });
@@ -32,26 +33,7 @@ app.use((req, res, next) => {
 app.use(router);
 
 // здесь обрабатываем все ошибки
-app.use((err, req, res, next) => {
-  // если у ошибки нет статуса, выставляем 500
-  const { statusCode = 500, message, name } = err;
-  if (name === 'CastError') {
-    res.status(400).send({
-      message: 'Неправильный запрос, возможно некорректный идентификатор',
-    });
-  } else if (name === 'ValidationError') {
-    res.status(400).send({
-      message: err.message.split('-')[1]
-        ? err.message.split('-')[1]
-        : err.message,
-    });
-  } else {
-    res.status(statusCode).send({
-      message: statusCode === 500 ? 'На сервере произошла ошибка' : message,
-    });
-  }
-  next();
-});
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
