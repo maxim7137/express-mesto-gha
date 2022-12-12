@@ -1,45 +1,47 @@
 const Card = require('../models/card');
+const NotFoundError = require('../errors/notFound');
+const NoAccess = require('../errors/noAccess');
 
-module.exports.createCard = (req, res) => {
+module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
   Card.create({ name, link, owner: req.user._id })
     .then((card) => res.send(card))
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        res.status(400).send({ message: err.message.split('-')[1] });
-      } else {
-        res.status(500).send({ message: err.message });
-      }
-    });
+    .catch(next);
 };
 
-module.exports.getCards = (req, res) => {
+module.exports.getCards = (req, res, next) => {
   Card.find({})
     .populate(['owner', 'likes'])
     .then((cards) => res.send(cards))
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch(next);
 };
 
-module.exports.deleteCard = (req, res) => {
-  Card.deleteOne({ _id: req.params.cardId })
+module.exports.deleteCard = (req, res, next) => {
+  const { cardId } = req.params;
+  const userId = req.user._id;
+  Card.findById(cardId)
+    .then((card) => {
+      if (!card) {
+        throw new NotFoundError('Карточка с таким _id не найдена');
+      } else if (!card.owner.equals(userId)) {
+        throw new NoAccess('Удалять можно только свои карточки');
+      } else {
+        card.delete();
+        res.send({ message: 'Пост удалён' });
+      }
+    })
+    .catch(next);
+
+  /*   Card.deleteOne({ _id: cardId })
     .then((answer) => {
       if (answer.deletedCount === 0) {
-        res
-          .status(404)
-          .send({ message: 'Карточка с указанным _id не найдена.' });
-      } else if (!answer) {
-        res.status(400).send({ message: 'Некорректный идентификатор' });
+        throw new NotFoundError('Карточка с таким _id не найдена');
       } else {
         res.send({ message: 'Пост удалён' });
       }
     })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Некорректный идентификатор' });
-      } else {
-        res.status(500).send({ message: err.message });
-      }
-    });
+res.send(card.owner)
+    */
 };
 
 module.exports.likeCard = (req, res) =>
