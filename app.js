@@ -22,14 +22,6 @@ app.use(limiter); // мидлвер для ограничения кол-во з
 app.use(helmet()); // мидлвер для для простановки security-заголовков, защ. от нек. уязвим.
 app.use(express.json()); // мидлвер для body
 
-// <-- временный мидлвер
-app.use((req, res, next) => {
-  req.headers.authorization = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2Mzk3N2MxNTc2N2IyOGNjZmIxY2M0NTQiLCJpYXQiOjE2NzA4NzIxMDYsImV4cCI6MTY3MTQ3NjkwNn0.uQCpfQ6UBEdWinbmOQ3c71g5FDMZ5s_pVLuFxfBbOnw';
-
-  next();
-});
-// временный мидлвер -->
-
 app.use(router);
 
 // здесь обрабатываем все ошибки

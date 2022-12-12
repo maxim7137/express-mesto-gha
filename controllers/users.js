@@ -11,7 +11,7 @@ module.exports.getUsers = (req, res, next) => {
 };
 
 module.exports.getUser = (req, res, next) => {
-  User.findById(req.params.userId)
+  User.findById(req.user._id)
     .orFail(new NotFoundError('Пользователь по указанному _id не найден'))
     .then((user) => {
       res.send(user);
@@ -73,7 +73,9 @@ module.exports.login = (req, res, next) => {
         })
         .then(() => {
           // создадим токен
-          const token = jwt.sign({ _id: user._id }, 'dev-key', { expiresIn: '7d' });
+          const token = jwt.sign({ _id: user._id }, 'dev-key', {
+            expiresIn: '7d',
+          });
           // вернём токен
           res.send({ token });
         })
