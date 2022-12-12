@@ -39,15 +39,3 @@ app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
   console.log(`App connect to dateBase ${DB}`);
 });
-
-/* (err) => {
-  if (err.message === 'NotFound') {
-    res
-      .status(404)
-      .send({ message: 'Пользователь по указанному _id не найден' });
-  } else if (err.name === 'CastError') {
-    res.status(400).send({ message: 'Некорректный идентификатор' });
-  } else {
-    res.status(500).send({ message: err.message });
-  }
-} */

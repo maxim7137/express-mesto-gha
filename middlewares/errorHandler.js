@@ -13,7 +13,7 @@ module.exports.errorHandler = (err, req, res, next) => {
     });
   } else {
     res.status(statusCode).send({
-      message: statusCode === 500 ? 'На сервере произошла ошибка' : message,
+      message: statusCode === 500 ? /* 'На сервере произошла ошибка' */ err : message,
     });
   }
   next();
