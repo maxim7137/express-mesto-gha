@@ -4,6 +4,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
+const { errors } = require('celebrate');
 const router = require('./routes');
 const { errorHandler } = require('./middlewares/errorHandler');
 
@@ -26,7 +27,9 @@ app.use(express.json()); // мидлвер для body
 app.use(router);
 
 // здесь обрабатываем все ошибки
-app.use(errorHandler);
+// обработчики ошибок
+app.use(errors()); // обработчик ошибок celebrate
+app.use(errorHandler); // свой обработчик ошибок
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);

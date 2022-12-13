@@ -1,7 +1,11 @@
 module.exports.errorHandler = (err, req, res, next) => {
   // если у ошибки нет статуса, выставляем 500
   const { statusCode = 500, message, name, code } = err;
-  if (name === 'CastError') {
+  if (message === 'Validation failed') {
+    res.send({
+      message: err.validation.body.message || message,
+    });
+  } else if (name === 'CastError') {
     res.status(400).send({
       message: 'Неправильный запрос, возможно некорректный идентификатор',
     });
