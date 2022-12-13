@@ -3,6 +3,9 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const NotFoundError = require('../errors/notFound');
 const Miss = require('../errors/miss');
+const BadRequest = require('../errors/badRequest');
+
+const { NODE_ENV, JWT_SECRET = 'dev-key' } = process.env;
 
 module.exports.getUsers = (req, res, next) => {
   User.find({})
@@ -21,11 +24,20 @@ module.exports.getUser = (req, res, next) => {
 
 module.exports.createUser = (req, res, next) => {
   const { email, password, name, about, avatar } = req.body;
-  bcrypt
-    .hash(password, 10)
-    .then((hash) => User.create({ email, password: hash, name, about, avatar }))
-    .then((user) => res.send(user))
-    .catch(next);
+  try {
+    if (password.length < 8) {
+      throw new BadRequest('Нет пароля или его длина меньше 8 символов');
+    } else {
+      bcrypt
+        .hash(password, 10)
+        .then((hash) =>
+          User.create({ email, password: hash, name, about, avatar }))
+        .then((user) => res.send(user))
+        .catch(next);
+    }
+  } catch (error) {
+    next(error);
+  }
 };
 
 module.exports.updateAvatar = (req, res, next) => {
@@ -59,6 +71,7 @@ module.exports.updateUser = (req, res, next) => {
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
   User.findOne({ email })
+    .select('+password')
     .then((user) => {
       if (!user) {
         throw new Miss('Неправильные почта или пароль');
@@ -73,7 +86,8 @@ module.exports.login = (req, res, next) => {
         })
         .then(() => {
           // создадим токен
-          const token = jwt.sign({ _id: user._id }, 'dev-key', {
+
+          const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-key', {
             expiresIn: '7d',
           });
           // вернём токен

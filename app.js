@@ -1,4 +1,5 @@
 /* eslint-disable max-len */
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const rateLimit = require('express-rate-limit');
