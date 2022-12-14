@@ -39,8 +39,8 @@ const cardSchema = new Schema({
   },
 });
 
-cardSchema.pre('deleteOne', { query: true, document: false }, () => {
+/* cardSchema.pre('deleteOne', { query: true, document: false }, () => {
   console.log('Удалена');
-});
+}); */
 
 module.exports = mongoose.model('card', cardSchema);

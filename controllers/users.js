@@ -22,6 +22,15 @@ module.exports.getUser = (req, res, next) => {
     .catch(next);
 };
 
+module.exports.getUserById = (req, res, next) => {
+  User.findById(req.params.userId)
+    .orFail(new NotFoundError('Пользователь по указанному _id не найден'))
+    .then((user) => {
+      res.send(user);
+    })
+    .catch(next);
+};
+
 module.exports.createUser = (req, res, next) => {
   const { email, password, name, about, avatar } = req.body;
   try {

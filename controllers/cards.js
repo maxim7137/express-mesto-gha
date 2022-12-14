@@ -18,6 +18,7 @@ module.exports.getCards = (req, res, next) => {
 
 module.exports.deleteCard = (req, res, next) => {
   const { cardId } = req.params;
+  console.log(cardId);
   const userId = req.user._id;
   Card.findById(cardId)
     .orFail(new NotFoundError('Карточка с таким _id не найдена'))
