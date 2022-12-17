@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
@@ -41,7 +42,15 @@ module.exports.createUser = (req, res, next) => {
         .hash(password, 10)
         .then((hash) =>
           User.create({ email, password: hash, name, about, avatar }))
-        .then((user) => res.send(user))
+        .then((user) =>
+          res.send({
+            email: user.email,
+            name: user.name,
+            about: user.about,
+            avatar: user.avatar,
+            _id: user._id,
+            __v: user.__v,
+          }))
         .catch(next);
     }
   } catch (error) {
@@ -96,9 +105,13 @@ module.exports.login = (req, res, next) => {
         .then(() => {
           // создадим токен
 
-          const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-key', {
-            expiresIn: '7d',
-          });
+          const token = jwt.sign(
+            { _id: user._id },
+            NODE_ENV === 'production' ? JWT_SECRET : 'dev-key',
+            {
+              expiresIn: '7d',
+            }
+          );
           // вернём токен
           res.send({ token });
         })
