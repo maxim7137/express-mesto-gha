@@ -44,6 +44,36 @@ module.exports.validateRegAndLoginUser = celebrate({
     .unknown(),
 });
 
+module.exports.validateUpdateUser = celebrate({
+  body: Joi.object()
+    .keys({
+      name: Joi.string().min(2).max(30).messages({
+        'string.min': 'Имя от 2 до 30 символов, Joi',
+        'string.max': 'Имя от 2 до 30 символов, Joi',
+      }),
+      about: Joi.string().min(2).max(30).messages({
+        'string.min': 'О себе от 2 до 30 символов, Joi',
+        'string.max': 'О себе от 2 до 30 символов, Joi',
+      }),
+    })
+    .unknown(),
+});
+
+module.exports.validateAvatar = celebrate({
+  body: Joi.object()
+    .keys({
+      avatar: Joi.string().custom((value, helpers) => {
+        if (userValidator.isURL(value)) {
+          return value;
+        }
+        return helpers.message(
+          'Ведите URL для ссылки на аватар, например: https://example.com/picture.jpg, Joi'
+        );
+      }),
+    })
+    .unknown(),
+});
+
 module.exports.validateNewCard = celebrate({
   body: Joi.object()
     .keys({
