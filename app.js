@@ -28,7 +28,7 @@ app.use(router);
 
 // здесь обрабатываем все ошибки
 // обработчики ошибок
-app.use(errors({ statusCode: 401 })); // обработчик ошибок celebrate
+// app.use(errors()); // обработчик ошибок celebrate
 app.use(errorHandler); // свой обработчик ошибок
 
 app.listen(PORT, () => {

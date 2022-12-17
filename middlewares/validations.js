@@ -86,15 +86,18 @@ module.exports.validateNewCard = celebrate({
     .unknown(),
 });
 
-module.exports.validateAuth = celebrate({
-  headers: Joi.object()
-    .keys({
-      authorization: Joi.string().required().messages({
-        'any.required': 'Необходима авторизация, Joi',
-      }),
-    })
-    .unknown(),
-});
+module.exports.validateAuth = celebrate(
+  {
+    headers: Joi.object()
+      .keys({
+        authorization: Joi.string().required().messages({
+          'any.required': 'Необходима авторизация, Joi',
+        }),
+      })
+      .unknown(),
+  },
+  { statusCode: 401 }
+);
 
 module.exports.validateCardId = celebrate({
   params: Joi.object()
