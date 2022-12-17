@@ -86,23 +86,38 @@ module.exports.validateNewCard = celebrate({
     .unknown(),
 });
 
-module.exports.validateAuth = celebrate(
-  {
-    headers: Joi.object()
-      .keys({
-        authorization: Joi.string().required().messages({
-          'any.required': 'Необходима авторизация, Joi',
-        }),
-      })
-      .unknown(),
-  },
-  { statusCode: 401 }
-);
+module.exports.validateAuth = celebrate({
+  headers: Joi.object()
+    .keys({
+      authorization: Joi.string().required().messages({
+        'any.required': 'Необходима авторизация, Joi',
+      }),
+    })
+    .unknown(),
+});
 
 module.exports.validateCardId = celebrate({
   params: Joi.object()
     .keys({
       cardId: Joi.string()
+        .required()
+        .custom((value, helpers) => {
+          if (isValidObjectId(value)) {
+            return value;
+          }
+          return helpers.message('Id не из этой базы данных, Joi-custom');
+        })
+        .messages({
+          'any.required': 'Необходимо указать id карточки, Joi',
+        }),
+    })
+    .unknown(),
+});
+
+module.exports.validateUserId = celebrate({
+  params: Joi.object()
+    .keys({
+      userId: Joi.string()
         .required()
         .custom((value, helpers) => {
           if (isValidObjectId(value)) {
