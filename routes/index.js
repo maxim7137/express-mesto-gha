@@ -1,6 +1,5 @@
 const router = require('express').Router();
 const { auth } = require('../middlewares/auth');
-// const { validateAuth } = require('../middlewares/validations');
 
 router.use('/', require('./auth'));
 
