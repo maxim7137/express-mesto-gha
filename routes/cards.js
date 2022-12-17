@@ -16,4 +16,10 @@ router.delete('/:cardId/likes', validateCardId, dislikeCard);
 router.delete('/:cardId', validateCardId, deleteCard);
 router.post('/', validateCardCreate, createCard);
 
+router.use('/*', (req, res) => {
+  res
+    .status(404)
+    .send({ message: 'Ресурс не найден. Проверьте URL и метод запроса' });
+});
+
 module.exports = router;
