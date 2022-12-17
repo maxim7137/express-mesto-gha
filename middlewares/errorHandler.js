@@ -1,12 +1,7 @@
-const { isCelebrateError } = require('celebrate');
-
 module.exports.errorHandler = (err, req, res, next) => {
   // если у ошибки нет статуса, выставляем 500
   const { statusCode = 500, message, name, code } = err;
-  if (err && isCelebrateError(err)) {
-    const joiMessage = err.details.get('headers').details[0].message;
-    res.status(401).send({ message: joiMessage });
-  } else if (name === 'CastError') {
+  if (name === 'CastError') {
     res.status(400).send({
       message: 'Неправильный запрос, возможно некорректный идентификатор',
     });
