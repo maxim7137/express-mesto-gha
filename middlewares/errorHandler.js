@@ -1,7 +1,7 @@
 module.exports.errorHandler = (err, req, res, next) => {
   // если у ошибки нет статуса, выставляем 500
   const { statusCode = 500, message, name, code } = err;
-  if (message === 'Validation failed') {
+  if (err && message === 'Validation failed') {
     res.send({
       message: err.validation.body.message || message,
     });

@@ -105,9 +105,7 @@ module.exports.validateCardId = celebrate({
           if (isValidObjectId(value)) {
             return value;
           }
-          return helpers.message(
-            'Id не из этой базы данных, Joi-custom'
-          );
+          return helpers.message('Id не из этой базы данных, Joi-custom');
         })
         .messages({
           'any.required': 'Необходимо указать id карточки, Joi',
@@ -116,22 +114,30 @@ module.exports.validateCardId = celebrate({
     .unknown(),
 });
 
-/*
-module.exports.validateSomeData = celebrate({
-  params: Joi.object().keys({
-    //валидаторы параметров адреса
-    // в нашем случае это только id
-  }),
-
-  body: Joi.object().keys({
-    //валидаторы данных передаваемых в body
-  }),
-
-  headers: Joi.object()
+module.exports.validateCardCreate = celebrate({
+  body: Joi.object()
     .keys({
-      //валидатор заголовка, требуется проверять только
-      //наличие заголовка authorization, в запросов которые требуют авторизации
+      name: Joi.string().min(2).max(30).messages({
+        'string.min': 'Название от 2 до 30 символов, Joi',
+        'string.max': 'Название от 2 до 30 символов, Joi',
+        'any.required': 'Название карточки обязательно, Joi',
+      }),
+
+      link: Joi.string()
+        .required()
+        .custom((value, helpers) => {
+          if (userValidator.isURL(value)) {
+            return value;
+          }
+          return helpers.message(
+            'Ведите ссылку на картинку, например: https://example.com/image.jpg, Joi-helpers'
+          );
+        })
+        .messages({
+          'any.required': 'Ссылка на картинку обязательна, Joi',
+          'string.custom':
+            'Ведите ссылку на картинку, например: https://example.com/image.jpg, Joi-messages',
+        }),
     })
     .unknown(),
 });
- */
