@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const router = require('./routes');
-const { errors } = require('./middlewares/celebrateErrorHandler');
+const { celebrateErrorHandler } = require('./middlewares/celebrateErrorHandler');
 const { errorHandler } = require('./middlewares/errorHandler');
 
 const { PORT = 3000, DB = 'mongodb://localhost:27017/mestodb' } = process.env;
@@ -28,7 +28,7 @@ app.use(router);
 
 // здесь обрабатываем все ошибки
 // обработчики ошибок
-app.use(errors); // обработчик ошибок celebrate
+app.use(celebrateErrorHandler); // обработчик ошибок celebrate
 app.use(errorHandler); // свой обработчик ошибок
 
 app.listen(PORT, () => {
