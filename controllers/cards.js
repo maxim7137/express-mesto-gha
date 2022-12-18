@@ -1,12 +1,19 @@
 const Card = require('../models/card');
 const NotFoundError = require('../errors/notFound');
 const NoAccess = require('../errors/noAccess');
+const BadRequest = require('../errors/badRequest');
 
 module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
   Card.create({ name, link, owner: req.user._id })
     .then((card) => res.send(card))
-    .catch(next);
+    .catch((error) => {
+      if (error.name === 'ValidationError') {
+        next(new BadRequest(`${error.message.split('-')[1]}`));
+      } else {
+        next(error);
+      }
+    });
 };
 
 module.exports.getCards = (req, res, next) => {
@@ -29,7 +36,14 @@ module.exports.deleteCard = (req, res, next) => {
         res.send({ message: 'Пост удалён' });
       }
     })
-    .catch(next);
+    .catch((error) => {
+      console.log(error);
+      if (error.name === 'CastError') {
+        next(new BadRequest('Введен некорректный _id карточки'));
+      } else {
+        next(error);
+      }
+    });
 };
 
 module.exports.likeCard = (req, res, next) =>
@@ -42,7 +56,13 @@ module.exports.likeCard = (req, res, next) =>
     .then((card) => {
       res.send(card);
     })
-    .catch(next);
+    .catch((error) => {
+      if (error.name === 'CastError') {
+        next(new BadRequest('Введен некорректный _id карточки'));
+      } else {
+        next(error);
+      }
+    });
 
 module.exports.dislikeCard = (req, res, next) =>
   Card.findByIdAndUpdate(
@@ -54,4 +74,10 @@ module.exports.dislikeCard = (req, res, next) =>
     .then((card) => {
       res.send(card);
     })
-    .catch(next);
+    .catch((error) => {
+      if (error.name === 'CastError') {
+        next(new BadRequest('Введен некорректный _id карточки'));
+      } else {
+        next(error);
+      }
+    });
