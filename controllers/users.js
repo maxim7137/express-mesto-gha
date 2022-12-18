@@ -4,7 +4,6 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const NotFoundError = require('../errors/notFound');
 const Miss = require('../errors/miss');
-const BadRequest = require('../errors/badRequest');
 
 const { NODE_ENV, JWT_SECRET = 'dev-key' } = process.env;
 
@@ -34,28 +33,19 @@ module.exports.getUserById = (req, res, next) => {
 
 module.exports.createUser = (req, res, next) => {
   const { email, password, name, about, avatar } = req.body;
-  try {
-    if (password.length < 8) {
-      throw new BadRequest('Нет пароля или его длина меньше 8 символов');
-    } else {
-      bcrypt
-        .hash(password, 10)
-        .then((hash) =>
-          User.create({ email, password: hash, name, about, avatar }))
-        .then((user) =>
-          res.send({
-            email: user.email,
-            name: user.name,
-            about: user.about,
-            avatar: user.avatar,
-            _id: user._id,
-            __v: user.__v,
-          }))
-        .catch(next);
-    }
-  } catch (error) {
-    next(error);
-  }
+  bcrypt
+    .hash(password, 10)
+    .then((hash) => User.create({ email, password: hash, name, about, avatar }))
+    .then((user) =>
+      res.send({
+        email: user.email,
+        name: user.name,
+        about: user.about,
+        avatar: user.avatar,
+        _id: user._id,
+        __v: user.__v,
+      }))
+    .catch(next);
 };
 
 module.exports.updateAvatar = (req, res, next) => {
@@ -104,13 +94,10 @@ module.exports.login = (req, res, next) => {
         })
         .then(() => {
           // создадим токен
-
           const token = jwt.sign(
             { _id: user._id },
             NODE_ENV === 'production' ? JWT_SECRET : 'dev-key',
-            {
-              expiresIn: '7d',
-            }
+            { expiresIn: '7d' }
           );
           // вернём токен
           res.send({ token });
