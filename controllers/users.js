@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const NotFoundError = require('../errors/notFound');
 const Miss = require('../errors/miss');
+const Conflict = require('../errors/conflict');
 
 const { NODE_ENV, JWT_SECRET = 'dev-key' } = process.env;
 
@@ -45,7 +46,13 @@ module.exports.createUser = (req, res, next) => {
         _id: user._id,
         __v: user.__v,
       }))
-    .catch(next);
+    .catch((error) => {
+      if (error.code === 11000) {
+        throw new Conflict('Пользователь с таким email уже существует');
+      } else {
+        next(error);
+      }
+    });
 };
 
 module.exports.updateAvatar = (req, res, next) => {
