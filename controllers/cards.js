@@ -37,7 +37,6 @@ module.exports.deleteCard = (req, res, next) => {
       }
     })
     .catch((error) => {
-      console.log(error);
       if (error.name === 'CastError') {
         next(new BadRequest('Введен некорректный _id карточки'));
       } else {
