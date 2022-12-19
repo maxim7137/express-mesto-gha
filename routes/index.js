@@ -7,7 +7,7 @@ router.use('/', require('./auth'));
 router.use('/cards', auth, require('./cards'));
 router.use('/users', auth, require('./users'));
 
-router.use('/*', auth, (req, res, next) => {
+router.use('/*', (req, res, next) => {
   next(new NotFoundError('Ресурс не найден. Проверьте URL и метод запроса'));
 });
 
