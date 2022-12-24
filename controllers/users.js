@@ -101,7 +101,7 @@ module.exports.updateUser = (req, res, next) => {
   )
     .orFail(new NotFoundError('Пользователь по указанному _id не найден'))
     .then((user) => {
-      res.send({ name: user.name, about: user.about });
+      res.send(user);
     })
     .catch((error) => {
       if (error.name === 'CastError') {

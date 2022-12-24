@@ -6,7 +6,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
-const cors = require('cors-express');
+const cors = require('cors');
 const { errors } = require('celebrate');
 
 const router = require('./routes');
