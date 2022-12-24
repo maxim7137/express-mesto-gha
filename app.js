@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unresolved */
 /* eslint-disable no-console */
 /* eslint-disable max-len */
 require('dotenv').config();
