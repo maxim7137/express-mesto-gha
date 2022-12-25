@@ -18,6 +18,7 @@ module.exports.createCard = (req, res, next) => {
 
 module.exports.getCards = (req, res, next) => {
   Card.find({})
+    .sort({ createdAt: -1 })
     .populate(['owner', 'likes'])
     .then((cards) => res.send(cards))
     .catch(next);
@@ -51,6 +52,7 @@ module.exports.likeCard = (req, res, next) =>
     { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
     { new: true }
   )
+    .populate(['owner', 'likes'])
     .orFail(new NotFoundError('Карточка с таким _id не найдена'))
     .then((card) => {
       res.send(card);
@@ -69,6 +71,7 @@ module.exports.dislikeCard = (req, res, next) =>
     { $pull: { likes: req.user._id } }, // убрать _id из массива
     { new: true }
   )
+    .populate(['owner', 'likes'])
     .orFail(new NotFoundError('Карточка с таким _id не найдена'))
     .then((card) => {
       res.send(card);
