@@ -9,8 +9,9 @@ const helmet = require('helmet');
 const cors = require('cors');
 const { errors } = require('celebrate');
 
-const router = require('./routes');
-const { errorHandler } = require('./middlewares/errorHandler');
+const router = require('./routes'); // импорт роутов
+const { errorHandler } = require('./middlewares/errorHandler'); // импорт обработчика ошибок
+const { requestLogger, errorLogger } = require('./middlewares/logger'); // импорт логгеров
 
 const { DB = 'mongodb://localhost:27017/mestodb' } = process.env;
 
@@ -30,7 +31,9 @@ app.use(limiter); // мидлвер для ограничения кол-во з
 app.use(helmet()); // мидлвер для для простановки security-заголовков, защ. от нек. уязвим.
 app.use(express.json()); // мидлвер для body
 
+app.use(requestLogger); // подключаем мидлвер логгер запросов
 app.use(router);
+app.use(errorLogger); // подключаем логгер ошибок
 
 // здесь обрабатываем все ошибки
 app.use(errors()); // обработчик ошибок celebrate
