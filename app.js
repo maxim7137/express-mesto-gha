@@ -12,7 +12,7 @@ const { errors } = require('celebrate');
 const router = require('./routes');
 const { errorHandler } = require('./middlewares/errorHandler');
 
-const { PORT = 3001, DB = 'mongodb://localhost:27017/mestodb' } = process.env;
+const { DB = 'mongodb://localhost:27017/mestodb' } = process.env;
 
 const app = express();
 
@@ -36,7 +36,4 @@ app.use(router);
 app.use(errors()); // обработчик ошибок celebrate
 app.use(errorHandler); // свой обработчик ошибок
 
-app.listen(PORT, () => {
-  console.log(`App listening on port ${PORT}`);
-  console.log(`App connect to dateBase ${DB}`);
-});
+module.exports = { app, DB };
