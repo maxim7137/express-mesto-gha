@@ -1,3 +1,5 @@
+/* eslint-disable object-shorthand */
+/* eslint-disable func-names */
 /* eslint-disable import/no-unresolved */
 /* eslint-disable no-console */
 /* eslint-disable max-len */
@@ -17,7 +19,24 @@ const { DB = 'mongodb://localhost:27017/mestodb' } = process.env;
 
 const app = express();
 
-app.use(cors());
+const whiteList = [
+  'https://praktikum.tk',
+  'http://praktikum.tk',
+  'https://localhost:3000',
+  'http://localhost:3000',
+  'localhost:3000',
+];
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (whiteList.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+};
+
+app.use(cors(corsOptions));
 
 mongoose.set('strictQuery', false);
 mongoose.connect(DB);
