@@ -19,6 +19,7 @@ const app = express();
 
 app.use(cors());
 
+mongoose.set('strictQuery', false);
 mongoose.connect(DB);
 
 const limiter = rateLimit({
