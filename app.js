@@ -22,6 +22,9 @@ const app = express();
 const whiteList = [
   'https://praktikum.tk',
   'http://praktikum.tk',
+  'https://maxim.nomoredomains.club',
+  'http://maxim.nomoredomains.club',
+  'maxim.nomoredomains.club',
   'https://localhost:3000',
   'http://localhost:3000',
   'localhost:3000',
